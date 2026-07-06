@@ -300,6 +300,38 @@ button:active{
 
 }
 
+#wait {
+    background: white;
+    width: 420px;
+    margin: auto;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+#wait h2 {
+    font-size: 32px;
+    color: #ff4757;
+    margin-top: 0;
+}
+
+/* くるくるアニメーション */
+.spinner {
+    margin: 30px auto;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #ff4757;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 #joinScreen {
     background: white;
     width: 420px;
