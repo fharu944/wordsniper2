@@ -29,6 +29,20 @@
 
 </div>
 
+<div id="rulesScreen" style="display:none;">
+    <h2>遊び方</h2>
+    
+    <div class="rules-content">
+        <p>テーマと文字に合う言葉を答えます。</p>
+        <p class="example">例）テーマ：<strong>食べ物</strong> ＋ 文字：<strong>「あ」</strong><br>👉 アイスクリーム！</p>
+        <p>相手より先に正解して得点を稼ぎ、高得点を目指しましょう！</p>
+    </div>
+
+    <button class="grayBtn" onclick="backStartFromRules()">
+        戻る
+    </button>
+</div>
+
 <div id="joinScreen" style="display:none;">
 
     <h2>ルーム参加</h2>
@@ -178,7 +192,13 @@ function backStartFromJoin(){
 }
 
 function showRules(){
-    alert("テーマと文字に合う言葉を答えます。\n例テーマ：食べ物 文字：あ アイスクリームなど。\n先に得点した方が勝ちです。");
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("rulesScreen").style.display = "flex";
+}
+
+function backStartFromRules(){
+    document.getElementById("rulesScreen").style.display = "none";
+    document.getElementById("startScreen").style.display = "flex";
 }
 
 function openInput(){
