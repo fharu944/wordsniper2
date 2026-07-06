@@ -1,0 +1,404 @@
+body{
+    font-family:sans-serif;
+    background:linear-gradient(135deg,#74ebd5,#ACB6E5);
+    text-align:center;
+    padding:50px;
+}
+
+.container{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    width:320px;
+    min-height:500px;
+    margin:auto;
+    box-shadow:0 10px 15px rgba(0,0,0,0.2);
+
+    display:flex;
+    flex-direction:column;
+}
+
+#scores{
+    display:flex;
+    gap:20px;
+
+    margin-bottom:20px;
+}
+
+.player-box{ 
+    flex:1;
+
+    background:#111;
+    color:white;
+
+    border-radius:15px;
+    padding:10px;
+}
+
+.player-name{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.player-score{
+    font-size:30px;
+    margin-top:10px;
+}
+
+.box-container{
+    display:flex;
+    gap:10px;
+}
+
+.box{
+    flex:1;
+    background:#008000;
+    border:none;
+    border-radius:20px;
+    padding:40px;
+    margin-top:15px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+
+    color:white;
+    font-size:20px;
+}
+
+.bottom-menu{
+    display:flex;
+    gap:10px;
+
+    margin-top:auto;
+}
+
+.bottom-menu button{
+    flex:1;
+    height:80px;
+
+    font-size:20px;
+    border-radius:12px;
+    border:none;
+
+    color:white;
+    cursor:pointer;
+}
+
+.btn1{
+    background:red;
+}
+
+.btn2{
+    background:blue;
+}
+.yes-btn{
+    background:#4CAF50;
+    color:white;
+
+    border:none;
+    border-radius:10px;
+
+    padding:10px 20px;
+
+    font-size:18px;
+}
+
+.no-btn{
+    background:#f44336;
+    color:white;
+
+    border:none;
+    border-radius:10px;
+
+    padding:10px 20px;
+
+    font-size:18px;
+}
+
+#startScreen{
+
+    background:white;
+
+    width:350px;
+
+    margin:auto;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+#startScreen h1{
+
+    font-size:40px;
+
+    margin-bottom:30px;
+
+}
+
+#startScreen button{
+
+    padding:15px 30px;
+
+    font-size:20px;
+
+    border-radius:15px;
+
+    background:#4CAF50;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+#answerArea{
+    position:absolute;
+
+    top: 70%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+    display: none;
+
+    width: 300px;
+}
+
+#answerInput{
+
+    width: 90px;
+
+    padding: 15px;
+
+    font-size: 20px;
+
+    border-radius: 10px;
+
+    border: 2px solid #ccc;
+
+    margin-bottom: 15px;
+}
+
+button{
+    transition: 0.1s;
+}
+
+button:hover{
+    transform: scale(1.05);
+}
+
+button:active{
+    transform: scale(0.95);
+}
+
+#resultMessage{
+    position: absolute;
+
+    top: 60%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 100px;
+    font-weight: bold;
+
+    color: gold;
+
+    text-shadow: 0 0 10px orange;
+
+    display: none;
+}
+
+#judgeArea{
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+    display:none;
+}
+#createScreen{
+
+    background:white;
+
+    width:420px;
+
+    margin:auto;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+#createScreen h2{
+
+    font-size:40px;
+
+    color:#2e7d32;
+
+}
+
+#createScreen p{
+
+    margin:0;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+}
+
+#createScreen input{
+
+    width:90%;
+
+    padding:15px;
+
+    font-size:22px;
+
+    border-radius:15px;
+
+    border:2px solid #4CAF50;
+
+    text-align:center;
+
+}
+
+#joinScreen {
+    background: white;
+    width: 420px;
+    margin: auto;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    display: flex; /* JavaScriptで制御 */
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+#joinScreen h2 {
+    font-size: 40px;
+    color: #2e7d32;
+}
+
+#joinScreen p {
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#joinScreen input {
+    width: 90%;
+    padding: 15px;
+    font-size: 22px;
+    border-radius: 15px;
+    border: 2px solid #4CAF50;
+    text-align: center;
+}
+
+#roomNumber{
+
+    width:90%;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    background:#f0fff0;
+
+    font-size:45px;
+
+    font-weight:bold;
+
+    color:#2e7d32;
+
+    text-align:center;
+
+    border:3px solid #4CAF50;
+
+}
+
+.roomText{
+
+    font-size:18px;
+
+    color:#555;
+
+}
+
+.greenBtn{
+
+    width:90%;
+
+    padding:18px;
+
+    font-size:25px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#4CAF50;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+.grayBtn{
+
+    width:90%;
+
+    padding:18px;
+
+    font-size:25px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#9e9e9e;
+
+    color:white;
+
+    cursor:pointer;
+
+}
