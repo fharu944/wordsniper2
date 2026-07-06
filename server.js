@@ -13,8 +13,7 @@ const server = http.createServer(app);
 app.use(express.static("public"));
 
 app.get("/", (req, res)=> {
-    res.render("index", {text:"Nodejs and Express"});
-});
+    res.sendFile(__dirname + "/public/index.html");
 
 app.get("/json", (req, res) => {
     const data = fs.readFileSync("./data.json");
