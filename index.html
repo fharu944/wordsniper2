@@ -191,6 +191,62 @@ function backStart(){
 
 }
 
+// --- 待機画面を呼び出す処理（新規追加・修正） ---
+
+// 【ルーム作成画面】の「ゲーム開始」ボタンを押したときに呼ばれる関数
+function startWaiting() {
+    // ルーム作成画面を隠す
+    document.getElementById("createScreen").style.display = "none";
+    // 待機画面（#wait）を表示する
+    document.getElementById("wait").style.display = "block";
+
+    // サーバーへ待機室に入ったことを通知（サーバー担当への橋渡しイベント名）
+    socket.emit("join_waiting_room");
+}
+
+// 【ルーム参加画面】で「参加」ボタンを押して成功した想定の処理
+async function joinRoomServer(){
+    let playerName = document.getElementById("joinPlayerNameInput").value;
+    let roomCode = document.getElementById("roomCode").value;
+
+    if(!playerName || !roomCode) {
+        alert("名前とルーム番号を入力してください");
+        return;
+    }
+
+    // サーバーへ参加を通知（サーバー担当への橋渡し）
+    // socket.emit("join_room", { name: playerName, room: roomCode });
+
+    // 参加側も、まずは待機画面へ遷移させる場合
+    document.getElementById("joinScreen").style.display = "none";
+    document.getElementById("wait").style.display = "block"; // 待機画面を表示
+    
+    socket.emit("join_waiting_room");
+}
+
+
+// --- サーバーから人数更新やゲーム開始の合図を受け取る処理（新規追加） ---
+
+// サーバーから「現在の待機人数」が送られてきたら数値を書き換える
+socket.on("update_players_count", (count) => {
+    const playersSpan = document.getElementById("currentPlayers");
+    if (playersSpan) {
+        playersSpan.textContent = count;
+    }
+});
+
+// サーバーから「2人揃ったので開始！」の合図が来たら本番画面へ
+socket.on("game_start_signal", () => {
+    // 待機画面を隠す
+    document.getElementById("wait").style.display = "none";
+    // ゲーム本番画面を表示する
+    document.getElementById("gameScreen").style.display = "flex";
+    
+    // 最初のテーマを取得する既存の関数を実行
+    changeTheme();
+    alert("対戦相手が揃いました！ゲームを開始します！");
+});
+
 // ルーム参加ボタンを押したときの処理（アラートを消して画面を表示）
 function joinRoom(){
     document.getElementById("startScreen").style.display = "none";
