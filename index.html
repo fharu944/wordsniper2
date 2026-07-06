@@ -238,18 +238,21 @@ function addPoint(player, PT){
     document.getElementById("score" + player).textContent = scores[player - 1];
 }
 
+// changeThemeの中は「サーバーにお願いする（emit）」だけにする
 async function changeTheme(){
     console.log("iou");
     socket.emit("give_theme");
-    socket.on("give_theme", (theme) => {
-        document.getElementById("themeBox").textContent = theme;
-    });
-
     socket.emit("give_word");
-    socket.on("give_word", (word) => {
-        document.getElementById("wordBox").textContent = word;
-    });
 }
+
+// サーバーからデータが返ってきたときの処理は、外側に1回だけ書く
+socket.on("give_theme", (theme) => {
+    document.getElementById("themeBox").textContent = theme;
+});
+
+socket.on("give_word", (word) => {
+    document.getElementById("wordBox").textContent = word;
+});
 
 function checkEnter(event){
     if(event.key === "Enter"){
