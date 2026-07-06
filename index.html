@@ -29,15 +29,6 @@
 
 </div>
 
-<div id="wait" style="display: none;">
-    <h2>対戦相手を待っています...</h2>
-    <p style="font-size: 24px; margin: 20px 0; font-weight: bold;">
-        準備完了: <span id="currentPlayers">1</span> / 2 人
-    </p>
-    <div class="spinner"></div>
-    <p style="color: #555;">もう1人が準備完了になると自動的にゲームが始まります。</p>
-</div>
-
 <div id="joinScreen" style="display:none;">
 
     <h2>ルーム参加</h2>
@@ -185,53 +176,6 @@ function backStartFromJoin(){
     document.getElementById("joinScreen").style.display = "none";
     document.getElementById("startScreen").style.display = "flex";
 }
-
-// --- 待機画面を呼び出す処理 ---
-
-// ルーム作成画面で「ゲーム開始」ボタンを押したときの処理
-function startWaiting() {
-    document.getElementById("createScreen").style.display = "none";
-    document.getElementById("wait").style.display = "block";
-
-    socket.emit("join_waiting_room");
-}
-
-// 【整理完了】ルーム参加画面で「参加」ボタンを押したときの処理
-async function joinRoomServer(){
-    let playerName = document.getElementById("joinPlayerNameInput").value;
-    let roomCode = document.getElementById("roomCode").value;
-
-    if(!playerName || !roomCode) {
-        alert("名前とルーム番号を入力してください");
-        return;
-    }
-
-    // 参加者もまずは待機画面へ切り替える
-    document.getElementById("joinScreen").style.display = "none";
-    document.getElementById("wait").style.display = "block"; 
-    
-    socket.emit("join_waiting_room");
-}
-
-// --- サーバーから通知を受け取る処理 ---
-
-// 待機人数が更新されたとき
-socket.on("update_players_count", (count) => {
-    const playersSpan = document.getElementById("currentPlayers");
-    if (playersSpan) {
-        playersSpan.textContent = count;
-    }
-});
-
-// 2人揃ってゲーム本番が始まるとき
-socket.on("game_start_signal", () => {
-    document.getElementById("wait").style.display = "none";
-    document.getElementById("gameScreen").style.display = "flex";
-    
-    changeTheme();
-    alert("対戦相手が揃いました！ゲームを開始します！");
-});
-
 
 function showRules(){
     alert("テーマと文字に合う言葉を答えます。\n例テーマ：食べ物 文字：あ アイスクリームなど。\n先に得点した方が勝ちです。");
