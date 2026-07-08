@@ -296,6 +296,11 @@ function addPoint(player, PT){
 
 // changeThemeの中は「サーバーにお願いする（emit）」だけにする
 async function changeTheme(){
+    let bar = document.getElementById("timerFill");
+    bar.style.width = "100%";
+    bar.style.background = "linear-gradient(90deg,#4CAF50,#ffeb3b,#f44336)";
+    bar.style.animation = "none";
+    
     console.log("iou");
     socket.emit("give_theme");
     socket.emit("give_word");
@@ -321,7 +326,9 @@ function startTimer(){
     timer = 10;
 
     let bar = document.getElementById("timerFill");
+
     bar.style.width = "100%";
+    bar.style.animation = "none";
 
     clearInterval(timerId);
 
@@ -331,18 +338,30 @@ function startTimer(){
 
         bar.style.width = (timer / 10 * 100) + "%";
 
+        // 残り3秒で赤く点滅
+        if(timer <= 3){
+            bar.style.background = "#f44336";
+            bar.style.animation = "blink 0.5s infinite";
+        }
+
         if(timer <= 0){
 
             clearInterval(timerId);
 
-            document.getElementById("answerArea").style.display="none";
+            document.getElementById("answerArea").style.display = "none";
 
             showMessage("時間切れ！","red");
+
+            // 2秒後に次のお題
+            setTimeout(function(){
+
+                changeTheme();
+
+            },2000);
 
         }
 
     },1000);
-
 }
 
 function showMessage(text,color){
