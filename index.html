@@ -109,6 +109,10 @@
 
 <div class="container" id="gameScreen" style="display:none;">
 
+    <div id="globalTimerBar" style="width: 100%; height: 12px; background: #eee; border-radius: 10px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);">
+        <div id="globalTimerFill" style="width: 100%; height: 100%; background: linear-gradient(90deg,#4CAF50,#ffeb3b,#f44336); transition: width 1s linear, background 0.5s;"></div>
+    </div>
+
     <div id="scores">
 
         <div class="player-box">
@@ -176,10 +180,32 @@
 
 </div>
 
+<div id="victoryScreen" style="display:none; text-align: center; background: white; padding: 40px 20px; border-radius: 20px; width: 320px; margin: auto; box-shadow: 0 10px 15px rgba(0,0,0,0.2);">
+    <h1 style="color: #ff9800; font-size: 36px; margin-bottom: 5px;">🏆 GAME OVER 🏆</h1>
+    <div id="winnerAnnounce" style="font-size: 28px; font-weight: bold; margin: 20px 0; color: #2e7d32;">
+        X Pの勝利！
+    </div>
+    
+    <div style="background: #f5f5f5; border-radius: 15px; padding: 15px; margin-bottom: 25px;">
+        <h3 style="margin-top: 0; color: #555;">最終スコア</h3>
+        <div style="display: flex; justify-content: space-around; font-size: 22px; font-weight: bold;">
+            <div>1P: <span id="finalScore1" style="color: #4CAF50;">0</span>点</div>
+            <div>2P: <span id="finalScore2" style="color: #2196F3;">0</span>点</div>
+        </div>
+    </div>
+
+    <button class="greenBtn" onclick="restartGame()" style="width: 100%; padding: 15px; font-size: 22px;">
+        もう一度遊ぶ
+    </button>
+</div>
+
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
 let socket = io();
+
+let globalTimer = 10;
+let globalTimerId;
 
 async function startGame(){
     document.getElementById("startScreen").style.display = "none";
@@ -209,23 +235,14 @@ function backStartFromJoin(){
     document.getElementById("startScreen").style.display = "flex";
 }
 
-function showRules(){
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("rulesScreen").style.display = "flex";
-}
-
-function backStartFromRules(){
-    document.getElementById("rulesScreen").style.display = "none";
-    document.getElementById("startScreen").style.display = "flex";
-}
-
 function openInput(){
+    clearInterval(globalTimerId); 
+    
     document.getElementById("answerArea").style.display = "block";
-    document.getElementById("timerBar").style.display = "block"; // 送信画面の中のタイマーを表示
+    document.getElementById("timerBar").style.display = "block"; 
     document.getElementById("playerButton").disabled = true;
     startTimer();
     
-    // 開いたときに入力欄に自動でフォーカスを合わせる
     setTimeout(() => {
         document.getElementById("answerInput").focus();
     }, 50);
@@ -233,7 +250,7 @@ function openInput(){
 
 async function sendAnswer(){
     clearInterval(timerId);
-    document.getElementById("timerBar").style.display = "none"; // タイマー非表示
+    document.getElementById("timerBar").style.display = "none"; 
     socket.emit("ans_check", (document.getElementById("answerInput").value));
     document.getElementById("answerInput").value = "";
 }
@@ -241,8 +258,8 @@ async function sendAnswer(){
 socket.on("ans_check", function(ret){
     if(ret.TF.includes("ok")){
         showMessage("正解！","gold");
-        addPoint(1, ret.PT);
-        changeTheme();
+        addPoint(1, 10); // 💡 正解で「10点」に変更
+        changeTheme(); 
         document.getElementById("playerButton").disabled = false;
     }
     else if(ret.TF.includes("NG")){
@@ -263,14 +280,14 @@ socket.on("AI_check", function(answer){
     console.log("type =", typeof answer);
     if(answer.includes("1")){
         showMessage("正解！","gold");
-        addPoint(1, 1000);
+        addPoint(1, 10); // 💡 AI判定で正解したときも「10点」に変更
         changeTheme();
         document.getElementById("playerButton").disabled = false;
     }
     else if(answer.includes("0")){
         document.getElementById("judgeArea").style.display ="block";
         showMessage("不正解！","red");
-        addPoint(1,-500);
+        addPoint(1, -10); // 💡 チャレンジ失敗(不正解)で「-10点」に変更
         document.getElementById("playerButton").disabled = false;
     }
     else{console.log("error");}
@@ -281,9 +298,10 @@ socket.on("AI_check", function(answer){
 async function aiJudgeNo(){
     clearInterval(timerId);
     showMessage("不正解！","red");
-    addPoint(1, -100);
+    addPoint(1, -10); // 💡 チャレンジせずに不正解確定のときも「-10点」に変更
     document.getElementById("judgeArea").style.display="none";
-    document.getElementById("playerButton").disabled = false; // 次のターンのためにボタンを復活
+    document.getElementById("playerButton").disabled = false; 
+    changeTheme(); 
 }
 
 let scores = [0,0];
@@ -291,30 +309,71 @@ let scores = [0,0];
 let timer = 10;
 let timerId;
 
+// 💡 得点追加と50点先取による勝利画面移動の処理
 function addPoint(player, PT){
-    scores[player - 1]+=PT;
+    scores[player - 1] += PT;
+    
+    // マイナス値になっても点数が崩れないよう、0点未満にならないストッパー（必要なければ消してOKです）
+    if(scores[player - 1] < 0) {
+        scores[player - 1] = 0;
+    }
+
     document.getElementById("score" + player).textContent = scores[player - 1];
 
+    // 💡 50点先取で勝利画面へ移動
     if(scores[player - 1] >= 50){
-        alert(player + "Pの勝利！");
+        // すべてのタイマーを停止
+        clearInterval(globalTimerId);
+        clearInterval(timerId);
+
+        // ゲーム画面を隠して、勝利画面を表示する
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("victoryScreen").style.display = "block";
+
+        // 勝利画面にテキストと最終スコアをセット
+        document.getElementById("winnerAnnounce").textContent = player + "P の勝利！🏆";
+        document.getElementById("finalScore1").textContent = scores[0];
+        document.getElementById("finalScore2").textContent = scores[1];
     }
 }
 
-// changeThemeの中は「サーバーにお願いする（emit）」だけにする
+// 💡 ゲームをはじめからリトライする関数
+function restartGame() {
+    // スコアの初期化
+    scores = [0, 0];
+    document.getElementById("score1").textContent = "0";
+    document.getElementById("score2").textContent = "0";
+
+    // 画面の切り替え
+    document.getElementById("victoryScreen").style.display = "none";
+    document.getElementById("gameScreen").style.display = "flex";
+
+    // ボタンの復活と入力エリアの初期化
+    document.getElementById("playerButton").disabled = false;
+    document.getElementById("answerArea").style.display = "none";
+    document.getElementById("judgeArea").style.display = "none";
+    document.getElementById("answerInput").value = "";
+
+    // 新しくお題を読み込んでスタート
+    changeTheme();
+}
+
 async function changeTheme(){
-    document.getElementById("timerBar").style.display = "none"; // タイマー初期化
+    clearInterval(timerId);
+    document.getElementById("timerBar").style.display = "none"; 
     
     let bar = document.getElementById("timerFill");
     bar.style.width = "100%";
     bar.style.background = "linear-gradient(90deg,#4CAF50,#ffeb3b,#f44336)";
     bar.style.animation = "none";
     
+    startGlobalTimer();
+
     console.log("iou");
     socket.emit("give_theme");
     socket.emit("give_word");
 }
 
-// サーバーからデータが返ってきたときの処理は、外側に1回だけ書く
 socket.on("give_theme", (theme) => {
     document.getElementById("themeBox").textContent = theme;
 });
@@ -329,6 +388,43 @@ function checkEnter(event){
     }
 }
 
+function startGlobalTimer(){
+    globalTimer = 10;
+    let gBar = document.getElementById("globalTimerFill");
+    gBar.style.width = "100%";
+    gBar.style.background = "linear-gradient(90deg,#4CAF50,#ffeb3b,#f44336)";
+    gBar.style.animation = "none";
+
+    clearInterval(globalTimerId);
+
+    globalTimerId = setInterval(function(){
+        globalTimer--;
+        gBar.style.width = (globalTimer / 10 * 100) + "%";
+
+        if(globalTimer <= 3){
+            gBar.style.background = "#f44336";
+            gBar.style.animation = "blink 0.5s infinite";
+        }
+
+        if(globalTimer <= 0){
+            clearInterval(globalTimerId);
+            clearInterval(timerId); 
+
+            document.getElementById("answerArea").style.display = "none";
+            document.getElementById("judgeArea").style.display = "none";
+            document.getElementById("timerBar").style.display = "none";
+            document.getElementById("answerInput").value = "";
+            document.getElementById("playerButton").disabled = false; 
+
+            showMessage("時間切れ！", "red");
+
+            setTimeout(function(){
+                changeTheme();
+            }, 2000);
+        }
+    }, 1000);
+}
+
 function startTimer(){
     timer = 10;
     let bar = document.getElementById("timerFill");
@@ -341,7 +437,6 @@ function startTimer(){
         timer--;
         bar.style.width = (timer / 10 * 100) + "%";
 
-        // 残り3秒で赤く点滅
         if(timer <= 3){
             bar.style.background = "#f44336";
             bar.style.animation = "blink 0.5s infinite";
@@ -355,12 +450,10 @@ function startTimer(){
             document.getElementById("answerInput").value = "";
 
             showMessage("時間切れ！","red");
-            addPoint(1, -100);
+            addPoint(1, -10); // 💡 1P入力時間切れも「-10点」に変更
 
-            // 時間切れになったときも、次のお題に行く前に1Pボタンを押せるように戻す
             document.getElementById("playerButton").disabled = false;
 
-            // 2秒後に次のお題
             setTimeout(function(){
                 changeTheme();
             },2000);
