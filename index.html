@@ -417,6 +417,7 @@ function startGlobalTimer(){
             document.getElementById("playerButton").disabled = false; 
 
             showMessage("時間切れ！", "red");
+            addpoint(1, 10);
 
             setTimeout(function(){
                 changeTheme();
