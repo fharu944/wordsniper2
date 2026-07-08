@@ -133,7 +133,7 @@
 
     </div>
 
-    <div id="timerBar"　style="display:none;">
+    <div id="timerBar" style="display:none;">
     <div id="timerFill"></div>
 </div>
 
@@ -220,7 +220,7 @@ function backStartFromRules(){
 
 function openInput(){
     document.getElementById("answerArea").style.display = "block";
-    document.gentElementById("timerBer").style.display = "block";
+    document.getElementById("timerBar").style.display = "block";
     document.getElementById("playerButton").disabled = true;
     startTimer();
 }
@@ -297,7 +297,7 @@ function addPoint(player, PT){
 // changeThemeの中は「サーバーにお願いする（emit）」だけにする
 async function changeTheme(){
 
-    document.getElementById("timerBer").style.display = "none";
+    document.getElementById("timerBar").style.display = "none";
     
     let bar = document.getElementById("timerFill");
     bar.style.width = "100%";
