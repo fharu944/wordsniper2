@@ -227,7 +227,7 @@ function openInput(){
 
 async function sendAnswer(){
     clearInterval(timerId);
-    document.getElementById("timerBer").style.display = "none";
+    document.getElementById("timerBar").style.display = "none";
     socket.emit("ans_check", (document.getElementById("answerInput").value));
     document.getElementById("answerInput").value = "";
     
