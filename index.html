@@ -287,7 +287,7 @@ socket.on("AI_check", function(answer){
     else if(answer.includes("0")){
         document.getElementById("judgeArea").style.display ="block";
         showMessage("不正解！","red");
-        addPoint(1, -10); // 💡 チャレンジ失敗(不正解)で「-10点」に変更
+        addPoint(1, 10); // 💡 チャレンジ失敗(不正解)で「-10点」に変更
         document.getElementById("playerButton").disabled = false;
     }
     else{console.log("error");}
@@ -298,7 +298,7 @@ socket.on("AI_check", function(answer){
 async function aiJudgeNo(){
     clearInterval(timerId);
     showMessage("不正解！","red");
-    addPoint(1, -10); // 💡 チャレンジせずに不正解確定のときも「-10点」に変更
+    addPoint(1, 10); // 💡 チャレンジせずに不正解確定のときも「-10点」に変更
     document.getElementById("judgeArea").style.display="none";
     document.getElementById("playerButton").disabled = false; 
     changeTheme(); 
