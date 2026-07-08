@@ -109,6 +109,9 @@
 
 <div class="container" id="gameScreen" style="display:none;">
 
+     <div id="timerBar">
+    <div id="timerFill"></div>
+
     <div id="scores">
 
         <div class="player-box">
@@ -133,8 +136,6 @@
 
     </div>
 
-    <div id="timerBar">
-    <div id="timerFill"></div>
 </div>
 
     <div id="resultMessage"></div>
@@ -221,11 +222,9 @@ function backStartFromRules(){
 function openInput(){
     document.getElementById("answerArea").style.display = "block";
     document.getElementById("playerButton").disabled = true;
-    startTimer();
 }
 
 async function sendAnswer(){
-    clearInterval(timerId);
     socket.emit("ans_check", (document.getElementById("answerInput").value));
     document.getElementById("answerInput").value = "";
     
@@ -247,7 +246,6 @@ socket.on("ans_check", function(ret){
 });
 
 async function aiJudgeYes(){
-    clearInterval(timerId);
     socket.emit("AI_test", (document.getElementById("answerInput").value));
 }
 
@@ -272,7 +270,6 @@ socket.on("AI_check", function(answer){
 });
 
 async function aiJudgeNo(){
-    clearInterval(timerId);
     showMessage("不正解！","red");
     addPoint(1, -100);
     document.getElementById("judgeArea").style.display="none";
@@ -302,6 +299,9 @@ async function changeTheme(){
     console.log("iou");
     socket.emit("give_theme");
     socket.emit("give_word");
+
+    startTimer(); 
+    
 }
 
 // サーバーからデータが返ってきたときの処理は、外側に1回だけ書く
