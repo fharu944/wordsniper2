@@ -29,7 +29,6 @@
 
 </div>
 
-<!-- 遊び方画面（アップデート版） -->
 <div id="rulesScreen" style="display:none;">
     <h2>遊び方</h2>
     
@@ -56,10 +55,6 @@
     </button>
 </div>
 
-    <button class="grayBtn" onclick="backStartFromRules()">
-        戻る
-    </button>
-</div>
 
 <div id="joinScreen" style="display:none;">
 
@@ -184,8 +179,8 @@ async function startGame(){
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameScreen").style.display = "flex";
 
-    let playerName = prompt("名前を入力してください");
-    document.getElementById("playerName1").textContent = playerName;
+    let playerName =
+document.getElementById("playerNameInput").value;
     changeTheme();
 }
 
@@ -221,10 +216,12 @@ function backStartFromRules(){
 
 function openInput(){
     document.getElementById("answerArea").style.display = "block";
+    document.getElementById("playerButton").disabled = true;
 }
 
 async function sendAnswer(){
     socket.emit("ans_check", (document.getElementById("answerInput").value));
+    document.getElementById("answerInput").value = "";
 }
 
 socket.on("ans_check", function(ret){
@@ -232,6 +229,7 @@ socket.on("ans_check", function(ret){
         showMessage("正解！","gold");
         addPoint(1, ret.PT);
         changeTheme();
+        document.getElementById("playerButton").disabled = false;
     }
     else if(ret.TF.includes("NG")){
         document.getElementById("judgeArea").style.display ="block";
@@ -252,11 +250,13 @@ socket.on("AI_check", function(answer){
         showMessage("正解！","gold");
         addPoint(1, 1000);
         changeTheme();
+        document.getElementById("playerButton").disabled = false;
     }
     else if(answer.includes("0")){
         document.getElementById("judgeArea").style.display ="block";
         showMessage("不正解！","red");
         addPoint(1,-500);
+        document.getElementById("playerButton").disabled = false;
     }
     else{console.log("error");}
 
@@ -274,6 +274,10 @@ let scores = [0,0];
 function addPoint(player, PT){
     scores[player - 1]+=PT;
     document.getElementById("score" + player).textContent = scores[player - 1];
+
+    if(scores[player - 1] >= 50){
+        alert(player + "Pの勝利！");
+    }
 }
 
 // changeThemeの中は「サーバーにお願いする（emit）」だけにする
