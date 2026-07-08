@@ -437,4 +437,39 @@ button:active{
 
     cursor:pointer;
 
+    /* タイムバー */
+#timerBar{
+    width:100%;
+    height:18px;
+
+    background:#ddd;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    margin:20px 0;
+}
+
+#timerFill{
+    width:100%;
+    height:100%;
+
+    background:linear-gradient(90deg,#4CAF50,#ffeb3b,#f44336);
+
+    transition:width 0.1s linear;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 }
