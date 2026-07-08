@@ -133,6 +133,12 @@
 
     </div>
 
+    <div id="timerBar">
+    <div id="timerFill"></div>
+</div>
+
+<div id="resultMessage"></div>
+
     <div id="resultMessage"></div>
 
 <div id="answerArea" style="display:none;">
@@ -217,11 +223,14 @@ function backStartFromRules(){
 function openInput(){
     document.getElementById("answerArea").style.display = "block";
     document.getElementById("playerButton").disabled = true;
+    startTimer();
 }
 
 async function sendAnswer(){
+    clearInterval(timerId);
     socket.emit("ans_check", (document.getElementById("answerInput").value));
     document.getElementById("answerInput").value = "";
+    
 }
 
 socket.on("ans_check", function(ret){
@@ -240,6 +249,7 @@ socket.on("ans_check", function(ret){
 });
 
 async function aiJudgeYes(){
+    clearInterval(timerId);
     socket.emit("AI_test", (document.getElementById("answerInput").value));
 }
 
@@ -264,12 +274,16 @@ socket.on("AI_check", function(answer){
 });
 
 async function aiJudgeNo(){
+    clearInterval(timerId);
     showMessage("不正解！","red");
     addPoint(1, -100);
     document.getElementById("judgeArea").style.display="none";
 }
 
 let scores = [0,0];
+
+let timer = 10;
+let timerId;
 
 function addPoint(player, PT){
     scores[player - 1]+=PT;
@@ -300,6 +314,35 @@ function checkEnter(event){
     if(event.key === "Enter"){
         sendAnswer();
     }
+}
+
+function startTimer(){
+
+    timer = 10;
+
+    let bar = document.getElementById("timerFill");
+    bar.style.width = "100%";
+
+    clearInterval(timerId);
+
+    timerId = setInterval(function(){
+
+        timer--;
+
+        bar.style.width = (timer / 10 * 100) + "%";
+
+        if(timer <= 0){
+
+            clearInterval(timerId);
+
+            document.getElementById("answerArea").style.display="none";
+
+            showMessage("時間切れ！","red");
+
+        }
+
+    },1000);
+
 }
 
 function showMessage(text,color){
