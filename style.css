@@ -436,6 +436,7 @@ button:active{
     color:white;
 
     cursor:pointer;
+}
 
     /* タイムバー */
 #timerBar{
@@ -472,4 +473,4 @@ button:active{
     }
 }
 
-}
+
