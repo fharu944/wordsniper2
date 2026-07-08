@@ -134,8 +134,8 @@
     </div>
 
     <div id="timerBar" style="display:none;">
-    <div id="timerFill"></div>
-</div>
+        <div id="timerFill"></div>
+    </div>
 
     <div id="resultMessage"></div>
 
@@ -153,7 +153,7 @@
 
     <div class="bottom-menu">
 
-        <button class="btn1" onclick="openInput()"id="playerButton">
+        <button class="btn1" onclick="openInput()" id="playerButton">
             1P
         </button>
 
@@ -176,6 +176,7 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
+
 <script>
 let socket = io();
 
@@ -183,8 +184,7 @@ async function startGame(){
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameScreen").style.display = "flex";
 
-    let playerName =
-document.getElementById("playerNameInput").value;
+    let playerName = document.getElementById("playerNameInput").value;
     changeTheme();
 }
 
@@ -220,14 +220,14 @@ function backStartFromRules(){
 
 function openInput(){
     document.getElementById("answerArea").style.display = "block";
-    document.getElementById("timerBar").style.display = "block";
+    document.getElementById("timerBar").style.display = "block"; // 💡タイマー表示（スペル修正）
     document.getElementById("playerButton").disabled = true;
     startTimer();
 }
 
 async function sendAnswer(){
     clearInterval(timerId);
-    document.getElementById("timerBar").style.display = "none";
+    document.getElementById("timerBar").style.display = "none"; // 💡タイマー非表示（スペル修正）
     socket.emit("ans_check", (document.getElementById("answerInput").value));
     document.getElementById("answerInput").value = "";
     
@@ -278,6 +278,7 @@ async function aiJudgeNo(){
     showMessage("不正解！","red");
     addPoint(1, -100);
     document.getElementById("judgeArea").style.display="none";
+    document.getElementById("playerButton").disabled = false; // 💡次のターンのためにボタンを復活
 }
 
 let scores = [0,0];
@@ -296,8 +297,7 @@ function addPoint(player, PT){
 
 // changeThemeの中は「サーバーにお願いする（emit）」だけにする
 async function changeTheme(){
-
-    document.getElementById("timerBar").style.display = "none";
+    document.getElementById("timerBar").style.display = "none"; // 💡タイマー初期化（スペル修正）
     
     let bar = document.getElementById("timerFill");
     bar.style.width = "100%";
@@ -325,20 +325,15 @@ function checkEnter(event){
 }
 
 function startTimer(){
-
     timer = 10;
-
     let bar = document.getElementById("timerFill");
-
     bar.style.width = "100%";
     bar.style.animation = "none";
 
     clearInterval(timerId);
 
     timerId = setInterval(function(){
-
         timer--;
-
         bar.style.width = (timer / 10 * 100) + "%";
 
         // 残り3秒で赤く点滅
@@ -348,7 +343,6 @@ function startTimer(){
         }
 
         if(timer <= 0){
-
             clearInterval(timerId);
 
             document.getElementById("answerArea").style.display = "none";
@@ -358,15 +352,14 @@ function startTimer(){
             showMessage("時間切れ！","red");
             addPoint(1, -100);
 
+            // 💡時間切れになったときも、次のお題に行く前に1Pボタンを押せるように戻す
+            document.getElementById("playerButton").disabled = false;
+
             // 2秒後に次のお題
             setTimeout(function(){
-
                 changeTheme();
-
             },2000);
-
         }
-
     },1000);
 }
 
