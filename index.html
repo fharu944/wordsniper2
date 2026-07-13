@@ -66,8 +66,8 @@
     <p>ルーム番号</p>
     <input type="text" id="roomCode" placeholder="ルーム番号（6桁）">
 
-    <button class="greenBtn" onclick="joinRoomServer()">
-        参加
+    <button class="greenBtn" onclick="goToWaitingFromJoin()">
+        参加して待機
     </button>
 
     <button class="grayBtn" onclick="backStartFromJoin()">
@@ -96,8 +96,8 @@
         相手にこの番号を教えてください
     </p>
 
-    <button class="greenBtn" onclick="startWaiting()">
-        ゲーム開始
+    <button class="greenBtn" onclick="goToQaitingFromCreate()">
+        ホストとして待機
     </button>
 
     <button class="grayBtn"
@@ -105,6 +105,19 @@
         戻る
     </button>
     
+</div>
+
+<!-- 💡 新しく追加する待機画面 -->
+<div id="waitingScreen" style="display:none;">
+    <h2>ルーム待機中</h2>
+    <div class="loading-box">
+        <span class="dots">対戦相手を待っています</span>
+    </div>
+    <p class="room-display-text">ルーム番号: <span id="displayRoomNumber">------</span></p>
+    
+    <button class="grayBtn" onclick="backStartFromWaiting()">
+        キャンセルのため戻る
+    </button>
 </div>
 
 <div class="container" id="gameScreen" style="display:none;">
@@ -471,6 +484,61 @@ function showMessage(text,color){
     setTimeout(function(){
         message.style.display = "none";
     },1000);
+}
+
+// 💡 ルーム作成画面から待機画面へ
+function goToWaitingFromCreate() {
+    let playerName = document.getElementById("playerNameInput").value;
+    if(!playerName) {
+        alert("名前を入力してください");
+        return;
+    }
+    
+    // 作成画面で表示されているルーム番号を取得して待機画面に反映
+    let roomNum = document.getElementById("roomNumber").textContent.trim();
+    document.getElementById("displayRoomNumber").textContent = roomNum;
+
+    document.getElementById("createScreen").style.display = "none";
+    document.getElementById("waitingScreen").style.display = "flex";
+    
+    // 既存のサーバー通信処理があればここで呼ぶ (例: socket.emit("create_room", ...))
+    // ※もし相手が来たら自動で startGame() が呼ばれるようにサーバー側と連動させてください
+}
+
+// 💡 ルーム参加画面から待機画面へ
+function goToWaitingFromJoin() {
+    let playerName = document.getElementById("joinPlayerNameInput").value;
+    let roomCode = document.getElementById("roomCode").value;
+    
+    if(!playerName || !roomCode) {
+        alert("名前とルーム番号を入力してください");
+        return;
+    }
+
+    document.getElementById("displayRoomNumber").textContent = roomCode;
+
+    document.getElementById("joinScreen").style.display = "none";
+    document.getElementById("waitingScreen").style.display = "flex";
+
+    // 既存のサーバー参加処理を実行
+    // joinRoomServer(); 
+}
+
+// 💡 待機画面からキャンセルして戻る
+function backStartFromWaiting() {
+    document.getElementById("waitingScreen").style.display = "none";
+    document.getElementById("startScreen").style.display = "flex";
+    
+    // 必要に応じてサーバーに退出を伝える処理をココに引く (例: socket.emit("leave_room"))
+}
+
+// 💡 [既存関数の修正] ゲームが始まったら待機画面を隠すようにする
+async function startGame(){
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("waitingScreen").style.display = "none"; // 追加
+    document.getElementById("gameScreen").style.display = "flex";
+
+    changeTheme();
 }
 </script>
 </body>
