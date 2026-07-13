@@ -438,6 +438,77 @@ button:active{
     cursor:pointer;
 }
 
+/* ==========================================
+   ゲーム終了画面 (Victory Screen)
+   ========================================== */
+#victoryScreen {
+    display: none;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 40px 20px;
+    border-radius: 20px;
+    width: 320px;
+    margin: 40px auto; /* 上下に少し余白を持たせて中央配置 */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* 影を少し柔らかく調整 */
+    box-sizing: border-box;
+}
+
+/* ゲームオーバーの見出し */
+#victoryScreen h1 {
+    color: #ff9800;
+    font-size: 32px;
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* 勝者アナウンス */
+#winnerAnnounce {
+    font-size: 26px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #2e7d32;
+}
+
+/* スコア表示のコンテナ */
+.final-score-container {
+    background-color: #f5f5f5;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 25px;
+}
+
+.final-score-container h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #555555;
+    font-size: 16px;
+}
+
+/* スコアの並び（フレックスボックス） */
+.final-score-flex {
+    display: flex;
+    justify-content: space-around;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.final-score-flex .p1-score {
+    color: #4CAF50;
+}
+
+.final-score-flex .p2-score {
+    color: #2196F3;
+}
+
+/* もう一度遊ぶボタンの調整 */
+#victoryScreen .restart-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
     /* タイムバー */
 #timerBar{
     width:100%;
