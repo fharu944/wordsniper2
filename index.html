@@ -180,25 +180,25 @@
 
 </div>
 
-<div id="victoryScreen" style="display:none; text-align: center; background: white; padding: 40px 20px; border-radius: 20px; width: 320px; margin: auto; box-shadow: 0 10px 15px rgba(0,0,0,0.2);">
-    <h1 style="color: #ff9800; font-size: 36px; margin-bottom: 5px;">🏆 GAME OVER 🏆</h1>
-    <div id="winnerAnnounce" style="font-size: 28px; font-weight: bold; margin: 20px 0; color: #2e7d32;">
-        X Pの勝利！
-    </div>
+<!-- ゲーム終了画面 -->
+<div id="victoryScreen">
+    <h1>🏆 GAME OVER 🏆</h1>
+    <div id="winnerAnnounce">X Pの勝利！</div>
     
-    <div style="background: #f5f5f5; border-radius: 15px; padding: 15px; margin-bottom: 25px;">
-        <h3 style="margin-top: 0; color: #555;">最終スコア</h3>
-        <div style="display: flex; justify-content: space-around; font-size: 22px; font-weight: bold;">
-            <div>1P: <span id="finalScore1" style="color: #4CAF50;">0</span>点</div>
-            <div>2P: <span id="finalScore2" style="color: #2196F3;">0</span>点</div>
+    <div class="final-score-container">
+        <h3>最終スコア</h3>
+        <div class="final-score-flex">
+            <div>1P: <span id="finalScore1" class="p1-score">0</span>点</div>
+            <div>2P: <span id="finalScore2" class="p2-score">0</span>点</div>
         </div>
     </div>
 
-    <button class="greenBtn" onclick="restartGame()" style="width: 100%; padding: 15px; font-size: 22px;">
+    <!-- 既存のgreenBtnと、新しく作ったrestart-btnクラスを付与 -->
+    <button class="greenBtn restart-btn" onclick="restartGame()">
         もう一度遊ぶ
     </button>
 </div>
-
+    
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
