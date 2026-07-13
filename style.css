@@ -599,4 +599,23 @@ button:active{
     }
 }
 
+#answerArea button {
+    width: 160px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    border-radius: 30px;
+    background: linear-gradient(90deg,#42A5F5,#1E88E5);
+    color: white;
+    border: none;
+    transition: .2s;
+}
 
+#answerArea button:hover {
+    filter: brightness(1.1);
+}
+
+#answerArea button:active {
+    transform: scale(0.95);
+}
